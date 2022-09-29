@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,6 @@ public class Product {
     private BigDecimal price;
     private int quantity;
     @ElementCollection
-    private List<Category> category;
+    private List<Category> categories =new ArrayList<>();
     private String imageUrl;
 }

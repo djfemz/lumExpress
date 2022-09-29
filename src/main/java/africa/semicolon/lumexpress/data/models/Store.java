@@ -1,6 +1,7 @@
 package africa.semicolon.lumexpress.data.models;
 
 import lombok.*;
+import org.springframework.data.repository.CrudRepository;
 
 import javax.persistence.*;
 import java.util.Set;

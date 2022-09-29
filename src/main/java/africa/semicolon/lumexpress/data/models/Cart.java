@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,5 +1,5 @@
 package africa.semicolon.lumexpress.data.models;
 
 public enum Category {
-    FASHION, ELECTRONICS, FOOD, FURNITURE, GAMES
+    FASHION, BEVERAGES, ELECTRONICS, FOOD, FURNITURE, GAMES
 }

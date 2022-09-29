@@ -2,13 +2,13 @@ package africa.semicolon.lumexpress.data.dto.response;
 
 import lombok.*;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
-public class CustomerRegistrationResponse {
-    private Long userId;
+public class AddProductResponse {
+    private Long productId;
     private String message;
     private int code;
 }

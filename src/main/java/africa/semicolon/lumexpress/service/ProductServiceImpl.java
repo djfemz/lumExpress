@@ -1,6 +1,7 @@
 package africa.semicolon.lumexpress.service;
 
 import africa.semicolon.lumexpress.data.dto.request.AddProductRequest;
+import africa.semicolon.lumexpress.data.dto.request.GetAllItemsRequest;
 import africa.semicolon.lumexpress.data.dto.request.UpdateProductRequest;
 import africa.semicolon.lumexpress.data.dto.response.AddProductResponse;
 import africa.semicolon.lumexpress.data.models.Category;
@@ -70,10 +71,13 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Page<Product> getAllProducts() {
-        Pageable pageSpecs = PageRequest.of(0, 5);
-        productRepository.findAll(pageSpecs);
-        return null;
+    public Page<Product> getAllProducts(GetAllItemsRequest getAllItemsRequest) {
+        Pageable pageSpecs = PageRequest
+                .of(getAllItemsRequest.getPageNumber()-1,
+                getAllItemsRequest.getNumberOfItemsPerPage());
+        Page<Product> products =
+                productRepository.findAll(pageSpecs);
+        return products;
     }
 
     @Override

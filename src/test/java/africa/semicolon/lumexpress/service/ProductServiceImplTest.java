@@ -2,7 +2,9 @@ package africa.semicolon.lumexpress.service;
 
 import africa.semicolon.lumexpress.data.dto.request.AddProductRequest;
 import africa.semicolon.lumexpress.data.dto.request.GetAllItemsRequest;
+import africa.semicolon.lumexpress.data.dto.request.UpdateProductRequest;
 import africa.semicolon.lumexpress.data.dto.response.AddProductResponse;
+import africa.semicolon.lumexpress.data.dto.response.UpdateProductResponse;
 import africa.semicolon.lumexpress.data.models.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +31,7 @@ class ProductServiceImplTest {
     private ProductService productService;
     private AddProductRequest request;
 
+    private AddProductResponse response;
     @BeforeEach
     void setUp() throws IOException {
         Path path = Paths
@@ -37,19 +40,14 @@ class ProductServiceImplTest {
         MultipartFile file =
                 new MockMultipartFile("peak",
                         Files.readAllBytes(path));
-        request = AddProductRequest.builder()
-                .name("Milk")
-                .productCategory("Beverages")
-                .price(BigDecimal.valueOf(30.00))
-                .quantity(10)
-                .image(file)
-                .build();
+        request = buildAddProductRequest(file);
+        response = productService.addProduct(request);
     }
 
+
+
     @Test
-    void createProductTest() throws IOException {
-        AddProductResponse response =
-                productService.addProduct(request);
+    void addProductTest(){
         assertThat(response).isNotNull();
         assertThat(response.getProductId()).isGreaterThan(0L);
         assertThat(response.getMessage()).isNotNull();
@@ -58,12 +56,16 @@ class ProductServiceImplTest {
 
     @Test
     void updateProductDetailsTest() {
+        UpdateProductRequest updateRequest = buildUpdateRequest();
+        UpdateProductResponse updateResponse =
+                productService.updateProductDetails(updateRequest);
+        assertThat(updateResponse).isNotNull();
+        assertThat(updateResponse.getStatusCode())
+                .isEqualTo(201);
     }
 
     @Test
-    void getProductByIdTest() throws IOException {
-        AddProductResponse response =
-                productService.addProduct(request);
+    void getProductByIdTest() {
         Product foundProduct =
                 productService.getProductById(response.getProductId());
         assertThat(foundProduct).isNotNull();
@@ -72,8 +74,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void getAllProductsTest() throws IOException {
-        productService.addProduct(request);
+    void getAllProductsTest()  {
         var getItemsRequest = buildGetItemsRequest();
         Page<Product> productsPage = productService
                 .getAllProducts(getItemsRequest);
@@ -81,6 +82,13 @@ class ProductServiceImplTest {
         assertThat(productsPage).isNotNull();
         assertThat(productsPage.getTotalElements())
                 .isGreaterThan(0);
+    }
+
+
+    @Test
+    void deleteProductTest() {
+        assertThat(productService.deleteProduct(response.getProductId()));
+
     }
 
     private GetAllItemsRequest buildGetItemsRequest() {
@@ -91,7 +99,22 @@ class ProductServiceImplTest {
                 .build();
     }
 
-    @Test
-    void deleteProductTest() {
+    private AddProductRequest buildAddProductRequest(MultipartFile file) {
+        return AddProductRequest.builder()
+                .name("Milk")
+                .productCategory("Beverages")
+                .price(BigDecimal.valueOf(30.00))
+                .quantity(10)
+                .image(file)
+                .build();
+    }
+
+    private UpdateProductRequest buildUpdateRequest() {
+        return UpdateProductRequest.builder()
+                .price(BigDecimal.valueOf(40.00))
+                .productId(1L)
+                .description("its just milo")
+                .quantity(10)
+                .build();
     }
 }

@@ -16,5 +16,5 @@ public class UpdateProductResponse {
     private int statusCode;
     private String productName;
     private String description;
-    private BigDecimal price;
+    private double price;
 }

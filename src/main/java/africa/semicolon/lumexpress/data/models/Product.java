@@ -1,6 +1,7 @@
 package africa.semicolon.lumexpress.data.models;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,9 +20,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private BigDecimal price;
+    private double price;
     private int quantity;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Category> categories =new ArrayList<>();
     private String imageUrl;
 }

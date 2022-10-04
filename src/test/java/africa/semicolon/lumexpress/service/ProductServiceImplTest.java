@@ -6,6 +6,16 @@ import africa.semicolon.lumexpress.data.dto.request.UpdateProductRequest;
 import africa.semicolon.lumexpress.data.dto.response.AddProductResponse;
 import africa.semicolon.lumexpress.data.dto.response.UpdateProductResponse;
 import africa.semicolon.lumexpress.data.models.Product;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jackson.jsonpointer.JsonPointer;
+import com.github.fge.jackson.jsonpointer.JsonPointerException;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.RemoveOperation;
+import com.github.fge.jsonpatch.ReplaceOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +30,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +52,7 @@ class ProductServiceImplTest {
                 new MockMultipartFile("peak",
                         Files.readAllBytes(path));
         request = buildAddProductRequest(file);
-        response = productService.addProduct(request);
+//        response = productService.addProduct(request);
     }
 
 
@@ -56,12 +67,22 @@ class ProductServiceImplTest {
 
     @Test
     void updateProductDetailsTest() {
-        UpdateProductRequest updateRequest = buildUpdateRequest();
-        UpdateProductResponse updateResponse =
-                productService.updateProductDetails(updateRequest);
+        ObjectMapper mapper = new ObjectMapper();
+        UpdateProductResponse updateResponse=null;
+        try {
+            JsonNode value = mapper.readTree("50.00");
+            JsonPatch patch =
+                    new JsonPatch(List.of(new ReplaceOperation(
+                            new JsonPointer("/price"), value)));
+            updateResponse = productService.updateProductDetails(1L, patch);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         assertThat(updateResponse).isNotNull();
         assertThat(updateResponse.getStatusCode())
-                .isEqualTo(201);
+                .isEqualTo(200);
+        assertThat(productService.getProductById(1L).getName())
+                .isEqualTo("eggs");
     }
 
     @Test

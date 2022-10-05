@@ -122,6 +122,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public String deleteProduct(Long id) {
-        return null;
+        productRepository.deleteById(id);
+        return "product deleted successfully";
     }
 }

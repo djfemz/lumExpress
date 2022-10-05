@@ -6,15 +6,11 @@ import africa.semicolon.lumexpress.data.dto.request.UpdateProductRequest;
 import africa.semicolon.lumexpress.data.dto.response.AddProductResponse;
 import africa.semicolon.lumexpress.data.dto.response.UpdateProductResponse;
 import africa.semicolon.lumexpress.data.models.Product;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import africa.semicolon.lumexpress.exception.ProductNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
-import com.github.fge.jackson.jsonpointer.JsonPointerException;
 import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.RemoveOperation;
 import com.github.fge.jsonpatch.ReplaceOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +29,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Slf4j
@@ -81,17 +78,17 @@ class ProductServiceImplTest {
         assertThat(updateResponse).isNotNull();
         assertThat(updateResponse.getStatusCode())
                 .isEqualTo(200);
-        assertThat(productService.getProductById(1L).getName())
-                .isEqualTo("eggs");
+        assertThat(productService.getProductById(1L).getPrice())
+                .isEqualTo(50.00);
     }
 
     @Test
     void getProductByIdTest() {
         Product foundProduct =
-                productService.getProductById(response.getProductId());
+                productService.getProductById(1L);
         assertThat(foundProduct).isNotNull();
         assertThat(foundProduct.getId())
-                .isEqualTo(response.getProductId());
+                .isEqualTo(1L);
     }
 
     @Test
@@ -108,8 +105,8 @@ class ProductServiceImplTest {
 
     @Test
     void deleteProductTest() {
-        assertThat(productService.deleteProduct(response.getProductId()));
-
+        assertThat(productService.deleteProduct(3L)).isNotNull();
+        assertThat(productService.getProductById(3L)).isNull();
     }
 
     private GetAllItemsRequest buildGetItemsRequest() {

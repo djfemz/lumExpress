@@ -10,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Seller extends LumExpressUser {
+public class Vendor extends LumExpressUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

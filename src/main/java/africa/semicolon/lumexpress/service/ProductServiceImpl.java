@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public UpdateProductResponse updateProductDetails(Long productId, JsonPatch patch)  {
         //find product
-        var foundProduct =
+        Product foundProduct =
                 productRepository.findById(productId)
                         .orElseThrow(()-> new ProductNotFoundException(
                                 String.format("product with id %d not found",
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService{
                         ));
         Product updatedProduct = applyPatchToProduct(patch, foundProduct);
         //save updated product
-        var savedProduct=productRepository.save(updatedProduct);
+        Product savedProduct=productRepository.save(updatedProduct);
         return buildUpdateResponse(savedProduct);
     }
 
@@ -80,11 +80,10 @@ public class ProductServiceImpl implements ProductService{
         //convert found product to json node
         var productNode = objectMapper.convertValue(foundProduct, JsonNode.class);
         //apply patch to productNode
-        JsonNode patchedProductNode;
         try {
-            patchedProductNode = patch.apply(productNode);
+            JsonNode patchedProductNode = patch.apply(productNode);
             //convert patchedNode to product object
-            var updatedProduct =
+            Product updatedProduct =
                     objectMapper.readValue(objectMapper.writeValueAsBytes(patchedProductNode),
                             Product.class);
             return updatedProduct;

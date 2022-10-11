@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class VerificationTokenServiceImpl implements VerificationTokenService{
     @Override
-    public VerificationToken generateToken() {
+    public VerificationToken createToken() {
         return null;
     }
 }

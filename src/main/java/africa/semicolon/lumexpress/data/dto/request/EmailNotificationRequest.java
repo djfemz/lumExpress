@@ -1,4 +1,4 @@
-package africa.semicolon.lumexpress.service.notification;
+package africa.semicolon.lumexpress.data.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class EmailDetails {
+public class EmailNotificationRequest {
     private String userEmail;
     private String mailContent;
 }

@@ -1,5 +1,6 @@
 package africa.semicolon.lumexpress.service.notification;
 
+import africa.semicolon.lumexpress.data.dto.request.EmailNotificationRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -10,25 +11,25 @@ import javax.mail.internet.MimeMessage;
 
 @Service
 @AllArgsConstructor
-public class GmailEmailSenderImpl implements EmailSender{
+public class GmailNotificationServiceImpl implements EmailNotificationService {
 
     private final JavaMailSender javaMailSender;
 
     @Override
-    public String sendHtmlMail(EmailDetails emailDetails) {
+    public String sendHtmlMail(EmailNotificationRequest emailNotification) {
         MimeMessage mimeMessage =javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper =
                 new MimeMessageHelper(mimeMessage);
         try {
             mimeMessageHelper.setFrom("no-reply@email.lumExpress.com.ng");
-            mimeMessageHelper.setTo(emailDetails.getUserEmail());
-            mimeMessageHelper.setText(emailDetails.getMailContent(), true);
+            mimeMessageHelper.setTo(emailNotification.getUserEmail());
+            mimeMessageHelper.setText(emailNotification.getMailContent(), true);
             javaMailSender.send(mimeMessage);
             return String.format("email sent to %s successfully",
-                    emailDetails.getUserEmail());
+                    emailNotification.getUserEmail());
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-        return String.format("email not sent to %s", emailDetails.getUserEmail());
+        return String.format("email not sent to %s", emailNotification.getUserEmail());
     }
 }

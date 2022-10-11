@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @ToString
+@Builder
 public class VerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,6 +1,7 @@
 package africa.semicolon.lumexpress.service;
 
 import africa.semicolon.lumexpress.data.dto.request.CustomerRegistrationRequest;
+import africa.semicolon.lumexpress.data.dto.request.LoginRequest;
 import africa.semicolon.lumexpress.data.dto.response.CustomerRegistrationResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ class CustomerServiceImplTest {
     void setUp() {
         request = CustomerRegistrationRequest
                 .builder()
-                .email("test@gmail.com")
+                .email("tedoj24915@inkmoto.com")
                 .password("test Password")
                 .country("Nigeria")
                 .build();
@@ -33,7 +34,7 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    void register() {
+    void registerCustomerTest() {
         CustomerRegistrationResponse customerRegistrationResponse=
                 customerService.register(request);
         assertThat(customerRegistrationResponse).isNotNull();
@@ -43,10 +44,6 @@ class CustomerServiceImplTest {
                 .isGreaterThan(0);
         assertThat(customerRegistrationResponse.getCode())
                 .isEqualTo(201);
-    }
-
-    @Test
-    void login() {
     }
 
     @Test

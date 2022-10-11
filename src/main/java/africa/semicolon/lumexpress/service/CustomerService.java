@@ -8,6 +8,5 @@ import africa.semicolon.lumexpress.data.dto.response.LoginResponse;
 
 public interface CustomerService {
     CustomerRegistrationResponse register(CustomerRegistrationRequest registerRequest);
-    LoginResponse login(LoginRequest loginRequest);
     String completeProfile(UpdateCustomerDetails updateCustomerDetails);
 }

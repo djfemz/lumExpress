@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Vendor extends LumExpressUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

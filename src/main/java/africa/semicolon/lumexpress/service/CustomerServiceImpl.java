@@ -42,17 +42,19 @@ public class CustomerServiceImpl implements CustomerService{
         log.info("customer to be saved in db::{}", savedCustomer);
         var token =verificationTokenService.createToken(savedCustomer.getEmail());
         emailNotificationService.
-                sendHtmlMail(buildEmailNotificationRequest(token));
+                sendHtmlMail(buildEmailNotificationRequest(token, savedCustomer.getFirstName()));
         return registrationResponseBuilder(savedCustomer);
     }
 
-    private EmailNotificationRequest buildEmailNotificationRequest(VerificationToken verificationToken) {
+    private EmailNotificationRequest buildEmailNotificationRequest(VerificationToken verificationToken,
+                                                                   String customerName) {
         var email = getEmailTemplate();
         String mail = null;
         if (email!=null) {
             //TODO: remove hard-coded url to app environment
-            mail = String.format(email, verificationToken.getUserEmail(),
-                    "http://localhost:8080/api/v1/customer/verify" + verificationToken.getToken());
+            var verificationUrl="http://localhost:8080/api/v1/customer/verify/" + verificationToken.getToken();
+            mail = String.format(email, customerName, verificationUrl);
+            log.info("mailed url-->{}", verificationUrl);
         }
         return EmailNotificationRequest.builder()
                 .userEmail(verificationToken.getUserEmail())

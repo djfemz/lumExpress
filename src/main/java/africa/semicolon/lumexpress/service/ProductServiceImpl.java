@@ -112,6 +112,8 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Page<Product> getAllProducts(GetAllItemsRequest getAllItemsRequest) {
+
+
         Pageable pageSpecs = PageRequest
                 .of(getAllItemsRequest.getPageNumber()-1,
                 getAllItemsRequest.getNumberOfItemsPerPage());

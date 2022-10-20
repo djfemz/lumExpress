@@ -10,6 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+
+import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,20 +24,20 @@ class CartServiceImplTest {
     private CartService cartService;
     @Autowired
     private ProductService productService;
-
+    private Cart savedCart;
     @BeforeEach
     void setUp() {
+        Cart cart = new Cart();
+        savedCart = cartService.save(cart);
     }
 
     @Test
-    @DisplayName("test that cart can be created")
+    @DisplayName("test that product can be added to cart")
     void addProductToCartTest() {
         CartRequest cartRequest = CartRequest.builder()
-                .cartId(cartService.getCartList()
-                        .get(cartService.getCartList().size()-1)
-                        .getId())
+                .cartId(savedCart.getId())
                 .productId(productService
-                        .getAllProducts(new GetAllItemsRequest())
+                        .getAllProducts(new GetAllItemsRequest(1, 1))
                         .getContent().get(productService
                                 .getAllProducts(new GetAllItemsRequest(1, 1))
                                 .getNumberOfElements()-1).getId())
@@ -42,5 +45,8 @@ class CartServiceImplTest {
         CartResponse cartResponse = cartService.addProductToCart(cartRequest);
         log.info("{}", cartResponse);
         assertThat(cartResponse).isNotNull();
+        var cartSubTotal = cartResponse.getCart().getSubTotal();
+        assertThat(cartSubTotal).isLessThan(BigDecimal.valueOf(51));
+        assertThat(cartSubTotal).isGreaterThan(BigDecimal.valueOf(49.99));
     }
 }

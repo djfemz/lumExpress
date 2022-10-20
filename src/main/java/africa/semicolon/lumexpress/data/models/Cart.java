@@ -22,7 +22,7 @@ public class Cart {
     @OneToMany(fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Item> items=new ArrayList<>();
-    private BigDecimal subTotal;
+    private BigDecimal subTotal=BigDecimal.ZERO;
 
 
 }

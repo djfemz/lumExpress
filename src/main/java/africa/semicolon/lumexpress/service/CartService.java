@@ -9,4 +9,6 @@ import java.util.List;
 public interface CartService {
     CartResponse addProductToCart(CartRequest cartRequest);
     List<Cart> getCartList();
+
+    Cart save(Cart cart);
 }

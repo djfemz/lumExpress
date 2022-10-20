@@ -8,12 +8,14 @@ import africa.semicolon.lumexpress.data.models.Product;
 import africa.semicolon.lumexpress.data.repositories.CartRepository;
 import africa.semicolon.lumexpress.exception.CartNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CartServiceImpl implements CartService{
     private final CartRepository cartRepository;
     private final ProductService productService;
@@ -27,7 +29,7 @@ public class CartServiceImpl implements CartService{
 
         Item item = buildCartItem(foundProduct);
         cart.getItems().add(item);
-        Cart cartToSave = updateCartSubTotal(cart);
+        Cart cartToSave = updateCartSubTotal(cart, item);
         Cart savedCart = cartRepository.save(cartToSave);
 
         return CartResponse.builder()
@@ -41,6 +43,11 @@ public class CartServiceImpl implements CartService{
         return cartRepository.findAll();
     }
 
+    @Override
+    public Cart save(Cart cart) {
+        return cartRepository.save(cart);
+    }
+
     private Item buildCartItem(Product foundProduct) {
         return Item.builder()
                 .product(foundProduct)
@@ -48,14 +55,10 @@ public class CartServiceImpl implements CartService{
                 .build();
     }
 
-    private Cart updateCartSubTotal(Cart cart){
-        cart.getItems()
-                .forEach(item -> sumCartItemPrices(cart, item));
+    private Cart updateCartSubTotal(Cart cart, Item item){
+        cart.setSubTotal(cart.getSubTotal()
+                .add(item.getProduct().getPrice()));
         return cart;
     }
 
-    private static void sumCartItemPrices(Cart cart, Item item) {
-        var itemPrice = item.getProduct().getPrice();
-        cart.setSubTotal(itemPrice.add(cart.getSubTotal()));
-    }
 }

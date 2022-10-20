@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public interface ProductService {
     AddProductResponse addProduct(AddProductRequest request) throws IOException;
-    UpdateProductResponse updateProductDetails(Long productId, JsonPatch patch);
+    UpdateProductResponse updateProductDetails(Long productId, JsonPatch patch) throws JsonPatchException;
     Product getProductById(Long id);
     Page<Product> getAllProducts(GetAllItemsRequest getAllItemsRequest);
     String deleteProduct(Long id);

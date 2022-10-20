@@ -16,6 +16,7 @@ public class ProjectConfig {
     @Value("${cloudinary.api.secret}")
     private String cloudSecret;
 
+
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
@@ -31,4 +32,5 @@ public class ProjectConfig {
                         "secure", true)
         );
     }
+
 }

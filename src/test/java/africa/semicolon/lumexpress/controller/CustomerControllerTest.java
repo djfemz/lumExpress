@@ -22,7 +22,7 @@ class CustomerControllerTest {
     @BeforeEach
     void setUp() {
         request = CustomerRegistrationRequest.builder()
-                .email("john@gmail.com")
+                .email(null)
                 .password("johnny400")
                 .country("Naija")
                 .build();

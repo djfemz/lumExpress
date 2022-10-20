@@ -1,8 +1,11 @@
 package africa.semicolon.lumexpress.data.models;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,5 +20,9 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Item> items;
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<Item> items=new ArrayList<>();
+    private BigDecimal subTotal;
+
+
 }

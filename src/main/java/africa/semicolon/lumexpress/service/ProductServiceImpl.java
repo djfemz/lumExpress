@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public UpdateProductResponse updateProductDetails(Long productId, JsonPatch patch)  {
+    public UpdateProductResponse updateProductDetails(Long productId, JsonPatch patch) throws JsonPatchException {
         //find product
         Product foundProduct =
                 productRepository.findById(productId)
@@ -72,6 +72,7 @@ public class ProductServiceImpl implements ProductService{
                         ));
         Product updatedProduct = applyPatchToProduct(patch, foundProduct);
         //save updated product
+        if (updatedProduct==null) throw new JsonPatchException("update failed");
         Product savedProduct=productRepository.save(updatedProduct);
         return buildUpdateResponse(savedProduct);
     }

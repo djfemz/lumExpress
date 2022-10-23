@@ -9,11 +9,13 @@ import africa.semicolon.lumexpress.data.models.Cart;
 import africa.semicolon.lumexpress.data.models.Customer;
 import africa.semicolon.lumexpress.data.models.VerificationToken;
 import africa.semicolon.lumexpress.data.repositories.CustomerRepository;
+import africa.semicolon.lumexpress.exception.LumExpressException;
 import africa.semicolon.lumexpress.exception.UserNotFoundException;
 import africa.semicolon.lumexpress.service.notification.EmailNotificationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -33,13 +35,22 @@ public class CustomerServiceImpl implements CustomerService{
 
     private final VerificationTokenService verificationTokenService;
 
+    private final PasswordEncoder passwordEncoder;
+
     private final EmailNotificationService emailNotificationService;
 
+    //TODO: remove all hardcoded values, store 3rd-party secrets in environment
     @Override
-    public CustomerRegistrationResponse register(CustomerRegistrationRequest registerRequest) {
+    public CustomerRegistrationResponse register(CustomerRegistrationRequest registerRequest) throws LumExpressException {
+        Optional<Customer> foundCustomer = customerRepository.findByEmail(registerRequest.getEmail());
+        if (foundCustomer.isPresent()) throw new LumExpressException(
+            String.format("email %s has already been used", registerRequest.getEmail())
+        );
         Customer customer = mapper.map(registerRequest, Customer.class);
         customer.setCart(new Cart());
         setCustomerAddress(registerRequest, customer);
+        String encodedPassword = passwordEncoder.encode(customer.getPassword());
+        customer.setPassword(encodedPassword);
         Customer savedCustomer = customerRepository.save(customer);
         log.info("customer saved in db::{}", savedCustomer);
         var token =verificationTokenService.createToken(savedCustomer.getEmail());
@@ -91,7 +102,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public String completeCustomerProfile(UpdateCustomerDetails updateCustomerDetails) {
+    public String completeCustomerProfile(UpdateCustomerDetails updateCustomerDetails) throws UserNotFoundException {
         Customer customerToUpdate = customerRepository.findById(updateCustomerDetails
                         .getCustomerId())
                 .orElseThrow(()->new UserNotFoundException(

@@ -1,6 +1,5 @@
 package africa.semicolon.lumexpress.security;
 
-import africa.semicolon.lumexpress.data.models.Authority;
 import africa.semicolon.lumexpress.data.models.LumExpressUser;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,37 +9,34 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class SecureUser implements UserDetails {
-    private final LumExpressUser user;
+    private final LumExpressUser lumExpressUser;
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return lumExpressUser.getEmail();
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return lumExpressUser.getPassword();
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities =
-                new ArrayList<>();
-        user.getAuthorities().forEach(authority ->
-                addUserAuthoritiesToAuthoritiesList(authorities, authority));
-        return authorities;
+        return lumExpressUser.getAuthorities()
+                .stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.name()))
+                .collect(Collectors.toList());
     }
 
-    private static void addUserAuthoritiesToAuthoritiesList(List<SimpleGrantedAuthority> authorities, Authority authority) {
-        SimpleGrantedAuthority simpleGrantedAuthority =
-                new SimpleGrantedAuthority(authority.name());
-        authorities.add(simpleGrantedAuthority);
+    @Override
+    public boolean isEnabled() {
+        return lumExpressUser.isEnabled();
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -57,8 +53,5 @@ public class SecureUser implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+
 }

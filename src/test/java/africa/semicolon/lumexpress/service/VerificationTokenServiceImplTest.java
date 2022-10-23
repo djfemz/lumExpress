@@ -1,6 +1,7 @@
 package africa.semicolon.lumexpress.service;
 
 import africa.semicolon.lumexpress.data.models.VerificationToken;
+import africa.semicolon.lumexpress.exception.VerificationTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ class VerificationTokenServiceImplTest {
     }
 
     @Test
-    void isValidVerificationTokenTest(){
+    void isValidVerificationTokenTest() throws VerificationTokenException {
         assertThat(verificationToken).isNotNull();
         var response =
                 verificationTokenService

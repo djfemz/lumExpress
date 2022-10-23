@@ -3,6 +3,7 @@ package africa.semicolon.lumexpress.service;
 import africa.semicolon.lumexpress.data.dto.request.CustomerRegistrationRequest;
 import africa.semicolon.lumexpress.data.dto.request.UpdateCustomerDetails;
 import africa.semicolon.lumexpress.data.dto.response.CustomerRegistrationResponse;
+import africa.semicolon.lumexpress.exception.LumExpressException;
 import africa.semicolon.lumexpress.util.LumExpressUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    void registerCustomerTest() {
+    void registerCustomerTest() throws LumExpressException {
         CustomerRegistrationResponse customerRegistrationResponse=
                 customerService.register(request);
         assertThat(customerRegistrationResponse).isNotNull();
@@ -49,7 +50,7 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    void updateProfileTest() {
+    void updateProfileTest() throws LumExpressException {
         CustomerRegistrationResponse customerRegistrationResponse=
                 customerService.register(request);
         assertThat(customerRegistrationResponse).isNotNull();

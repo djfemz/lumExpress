@@ -30,7 +30,7 @@ class VerificationTokenRepositoryTest {
     }
 
     @Test
-    void findByUserEmailTest() {
+    void findByUserEmailTest() throws VerificationTokenException {
         verificationTokenRepository.save(verificationToken);
         VerificationToken foundToken =
                 verificationTokenRepository.findByUserEmail("test@email.com")
@@ -43,7 +43,7 @@ class VerificationTokenRepositoryTest {
     }
 
     @Test
-    void findByTokenTest() {
+    void findByTokenTest() throws VerificationTokenException {
         verificationTokenRepository.save(verificationToken);
         VerificationToken token = verificationTokenRepository.findByToken(verificationToken
                         .getToken())

@@ -42,7 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        var appAuthType = UsernamePasswordAuthenticationToken.class;
+        Class<UsernamePasswordAuthenticationToken> appAuthType = UsernamePasswordAuthenticationToken.class;
         return authentication.equals(appAuthType);
     }
 }

@@ -33,7 +33,7 @@ import java.util.Optional;
 @Slf4j
 public class ProductServiceImpl implements ProductService{
     private final ProductRepository productRepository;
-    private final ModelMapper mapper;
+    private final ModelMapper mapper=new ModelMapper();
     private final CloudService cloudService;
 
     private ObjectMapper objectMapper = new ObjectMapper();

@@ -4,10 +4,7 @@ import africa.semicolon.lumexpress.data.dto.request.CustomerRegistrationRequest;
 import africa.semicolon.lumexpress.data.dto.request.EmailNotificationRequest;
 import africa.semicolon.lumexpress.data.dto.request.UpdateCustomerDetails;
 import africa.semicolon.lumexpress.data.dto.response.CustomerRegistrationResponse;
-import africa.semicolon.lumexpress.data.models.Address;
-import africa.semicolon.lumexpress.data.models.Cart;
-import africa.semicolon.lumexpress.data.models.Customer;
-import africa.semicolon.lumexpress.data.models.VerificationToken;
+import africa.semicolon.lumexpress.data.models.*;
 import africa.semicolon.lumexpress.data.repositories.CustomerRepository;
 import africa.semicolon.lumexpress.exception.LumExpressException;
 import africa.semicolon.lumexpress.exception.UserNotFoundException;
@@ -15,7 +12,6 @@ import africa.semicolon.lumexpress.service.notification.EmailNotificationService
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -31,11 +27,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CustomerServiceImpl implements CustomerService{
     private final CustomerRepository customerRepository;
-    private final ModelMapper mapper;
+    private final ModelMapper mapper=new ModelMapper();
 
     private final VerificationTokenService verificationTokenService;
 
-    private final PasswordEncoder passwordEncoder;
 
     private final EmailNotificationService emailNotificationService;
 
@@ -49,8 +44,7 @@ public class CustomerServiceImpl implements CustomerService{
         Customer customer = mapper.map(registerRequest, Customer.class);
         customer.setCart(new Cart());
         setCustomerAddress(registerRequest, customer);
-        String encodedPassword = passwordEncoder.encode(customer.getPassword());
-        customer.setPassword(encodedPassword);
+        customer.getAuthorities().add(Authority.BUY);
         Customer savedCustomer = customerRepository.save(customer);
         log.info("customer saved in db::{}", savedCustomer);
         var token =verificationTokenService.createToken(savedCustomer.getEmail());

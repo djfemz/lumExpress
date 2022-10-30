@@ -4,6 +4,7 @@ import africa.semicolon.lumexpress.data.dto.request.CustomerRegistrationRequest;
 import africa.semicolon.lumexpress.exception.LumExpressException;
 import africa.semicolon.lumexpress.service.CustomerService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/customer")
 @AllArgsConstructor
+@Slf4j
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -30,6 +32,7 @@ public class CustomerController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllCustomers(){
+        log.info("here");
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 }

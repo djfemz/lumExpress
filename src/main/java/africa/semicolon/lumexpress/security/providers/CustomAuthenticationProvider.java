@@ -25,12 +25,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (userDetails!=null) {
             if (isPasswordMatch(authentication, userDetails)){
                 UsernamePasswordAuthenticationToken authenticatedToken =
-                        new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
+                        new UsernamePasswordAuthenticationToken(userDetails,
                                 authentication.getCredentials(),
                                 userDetails.getAuthorities());
                 return authenticatedToken;
             }
-            throw new BadCredentialsException("password incorrect");
+            throw new BadCredentialsException("incorrect password");
         }
         throw new AuthenticationCredentialsNotFoundException("email does not exist");
     }
@@ -42,7 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        var appAuthType = UsernamePasswordAuthenticationToken.class;
+        Class<UsernamePasswordAuthenticationToken> appAuthType = UsernamePasswordAuthenticationToken.class;
         return authentication.equals(appAuthType);
     }
 }

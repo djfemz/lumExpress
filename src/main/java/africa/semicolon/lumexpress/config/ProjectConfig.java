@@ -1,11 +1,17 @@
 package africa.semicolon.lumexpress.config;
 
+import africa.semicolon.lumexpress.security.jwt.JwtUtil;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @Configuration
 public class ProjectConfig {
@@ -16,11 +22,14 @@ public class ProjectConfig {
     @Value("${cloudinary.api.secret}")
     private String cloudSecret;
 
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-    @Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
-    }
+    @Value("${jwt.issuer}")
+    private String jwtIssuer;
+
+
+
 
     @Bean
     public Cloudinary cloudinary(){
@@ -31,6 +40,18 @@ public class ProjectConfig {
                         "api_secret",cloudSecret,
                         "secure", true)
         );
+    }
+
+
+    @Bean
+    public JwtUtil jwtUtil(){
+        return new JwtUtil(jwtIssuer, Algorithm.HMAC512(jwtSecret));
+    }
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return NoOpPasswordEncoder.getInstance();
     }
 
 }

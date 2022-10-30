@@ -4,12 +4,8 @@ package africa.semicolon.lumexpress.data.models;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,5 +28,6 @@ public class LumExpressUser {
     @Cascade(CascadeType.ALL)
     private List<Notification> messages = new ArrayList<>();
     @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(value = EnumType.STRING)
     private Set<Authority> authorities=new HashSet<>();
 }

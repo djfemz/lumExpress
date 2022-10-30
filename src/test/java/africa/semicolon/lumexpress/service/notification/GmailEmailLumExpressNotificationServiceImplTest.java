@@ -16,8 +16,8 @@ class GmailEmailLumExpressNotificationServiceImplTest {
     @Test
     void sendHtmlMailTest() {
         EmailNotificationRequest emailNotification = new EmailNotificationRequest();
-        emailNotification.setUserEmail("oladejifemi00@gmail.com");
-        emailNotification.setMailContent("Hi, whimp!!");
+        emailNotification.setUserEmail("ezeirunnechiamaka@gmail.com");
+        emailNotification.setMailContent("Hi, Spring-Queen!!");
         String response =
                 emailSender.sendHtmlMail(emailNotification);
         assertThat(response.contains("successfully")).isTrue();
